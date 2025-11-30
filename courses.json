@@ -1,0 +1,98 @@
+[
+  {
+    "id": 1,
+    "title": "Full Stack Web Development",
+    "category": "Web Development",
+    "level": "Intermediate",
+    "image": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=5c7b7fb9d3ab12f2b8d18a1a1f9c5c4a",
+    "banner": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3&s=4f3b3a6eb4a1a4b1b77c9d7f8b9d2f63",
+    "description": "Learn full stack web development with practical projects: HTML, CSS, JS, PHP, and databases.",
+    "lessons": [
+      {"title":"Intro to Web","video":"https://www.youtube.com/embed/UB1O30fR-EE","content":"<p>Overview of web technologies.</p>","duration":"8m"},
+      {"title":"HTML Basics","video":"https://www.youtube.com/embed/nuq0lU4bK7Q","content":"<p>HTML structure and tags.</p>","duration":"12m"},
+      {"title":"CSS Essentials","video":"https://www.youtube.com/embed/yfoY53QXEnI","content":"<p>Styling with CSS.</p>","duration":"18m"},
+      {"title":"JavaScript Fundamentals","video":"https://www.youtube.com/embed/hdI2bqOjy3c","content":"<p>JS basics and DOM.</p>","duration":"25m"},
+      {"title":"Project: ToDo App","video":"https://www.youtube.com/embed/TlB_eWDSMt4","content":"<p>Build a ToDo app.</p>","duration":"30m"}
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Frontend Masters: React Basics",
+    "category": "Frontend",
+    "level": "Beginner",
+    "image": "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=3da4f5d1a7b3b2c9a3a8c3a6dd0a6f8f",
+    "banner": "https://images.unsplash.com/photo-1518779578993-ec3579fee39f?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3&s=8b1b9e4b5f9a2c8d3d5c6b7a8e9f0a1b",
+    "description": "Get started with React: components, state, props and building small apps.",
+    "lessons": [
+      {"title":"React Intro","video":"https://www.youtube.com/embed/Ke90Tje7VS0","content":"<p>What is React?</p>","duration":"10m"},
+      {"title":"JSX & Components","video":"https://www.youtube.com/embed/EMfF54a2m9s","content":"<p>JSX syntax and components.</p>","duration":"15m"},
+      {"title":"State & Props","video":"https://www.youtube.com/embed/6Iedz2m2Y2s","content":"<p>Managing state and props.</p>","duration":"20m"},
+      {"title":"Hooks Overview","video":"https://www.youtube.com/embed/f687hBjwFcM","content":"<p>Using useState, useEffect.</p>","duration":"18m"},
+      {"title":"Build: Todo in React","video":"https://www.youtube.com/embed/Ke90Tje7VS0","content":"<p>Hands-on small project.</p>","duration":"28m"}
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Backend Basics with Node.js",
+    "category": "Backend",
+    "level": "Beginner",
+    "image": "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=1a2b3c4d5e6f7a8b9c0d",
+    "banner": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3&s=4f3b3a6eb4a1a4b1b77c9d7f8b9d2f63",
+    "description": "Learn server-side development with Node.js and Express.",
+    "lessons": [
+      {"title":"Node.js Intro","video":"https://www.youtube.com/embed/TlB_eWDSMt4","content":"<p>Overview of Node runtime.</p>","duration":"12m"},
+      {"title":"Express Basics","video":"https://www.youtube.com/embed/L72fhGm1tfE","content":"<p>Routing and middleware.</p>","duration":"20m"},
+      {"title":"APIs & JSON","video":"https://www.youtube.com/embed/pKd0Rpw7O48","content":"<p>Building REST APIs.</p>","duration":"22m"},
+      {"title":"Databases","video":"https://www.youtube.com/embed/9kRgVxULbag","content":"<p>Using MongoDB/MySQL.</p>","duration":"25m"},
+      {"title":"Deploying App","video":"https://www.youtube.com/embed/71wSzpLyW9k","content":"<p>Deploy to cloud.</p>","duration":"30m"}
+    ]
+  },
+  {
+    "id": 4,
+    "title": "Design Fundamentals",
+    "category": "Design",
+    "level": "Beginner",
+    "image": "https://images.unsplash.com/photo-1520792432672-8b3a4a1b6f5a?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=abcd1234",
+    "banner": "https://images.unsplash.com/photo-1508780709619-79562169bc64?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3&s=zzzz9999",
+    "description": "Basics of UI/UX and visual design.",
+    "lessons": [
+      {"title":"Principles of Design","video":"https://www.youtube.com/embed/ElV8o2Q6V3E","content":"<p>Alignment, contrast, balance.</p>","duration":"14m"},
+      {"title":"Color Theory","video":"https://www.youtube.com/embed/1Rs2ND1ryYc","content":"<p>Choosing palettes.</p>","duration":"18m"},
+      {"title":"Typography","video":"https://www.youtube.com/embed/3k2kFf7Xj3I","content":"<p>Readable typography.</p>","duration":"16m"},
+      {"title":"Wireframing","video":"https://www.youtube.com/embed/5sGOwFVUU0I","content":"<p>Plan screens quickly.</p>","duration":"20m"},
+      {"title":"Design Tools","video":"https://www.youtube.com/embed/3fumBcKC6RE","content":"<p>Figma and alternatives.</p>","duration":"25m"}
+    ]
+  },
+  {
+    "id": 5,
+    "title": "JavaScript Deep Dive",
+    "category": "Frontend",
+    "level": "Advanced",
+    "image": "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=ffff1111",
+    "banner": "https://images.unsplash.com/photo-1542831371-d531d36971e6?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3&s=eeee2222",
+    "description": "Advanced JavaScript topics, performance and architecture.",
+    "lessons": [
+      {"title":"Scopes & Closures","video":"https://www.youtube.com/embed/1JsJx1x35c0","content":"<p>Understanding closures.</p>","duration":"24m"},
+      {"title":"Async JS","video":"https://www.youtube.com/embed/PoRJizFvM7s","content":"<p>Promises, async/await.</p>","duration":"30m"},
+      {"title":"Memory & Performance","video":"https://www.youtube.com/embed/8aGhZQkoFbQ","content":"<p>Optimize apps.</p>","duration":"22m"},
+      {"title":"Patterns","video":"https://www.youtube.com/embed/sBws8MSXN7A","content":"<p>Module, factory, observer.</p>","duration":"26m"},
+      {"title":"Testing","video":"https://www.youtube.com/embed/7xqV2bV7wLc","content":"<p>Unit and integration tests.</p>","duration":"28m"}
+    ]
+  },
+  {
+    "id": 6,
+    "title": "CSS Animations & Tailwind",
+    "category": "Frontend",
+    "level": "Intermediate",
+    "image": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=aaaa3333",
+    "banner": "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3&s=bbbb4444",
+    "description": "Animations and Tailwind CSS advanced patterns.",
+    "lessons": [
+      {"title":"Transitions","video":"https://www.youtube.com/embed/c9U6g0v2W8A","content":"<p>Using CSS transitions.</p>","duration":"12m"},
+      {"title":"Keyframes","video":"https://www.youtube.com/embed/3dHNOWTI7H8","content":"<p>Animate with keyframes.</p>","duration":"18m"},
+      {"title":"Tailwind Tips","video":"https://www.youtube.com/embed/2y8x3pJ1v6w","content":"<p>Utilities and patterns.</p>","duration":"20m"},
+      {"title":"Performance","video":"https://www.youtube.com/embed/0fkgjv2l2r0","content":"<p>Keep animations smooth.</p>","duration":"22m"},
+      {"title":"Practical Project","video":"https://www.youtube.com/embed/Ov1ZW3y9mlw","content":"<p>Small UI with animations.</p>","duration":"30m"}
+    ]
+  }
+]

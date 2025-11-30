@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Lesson - MiniLMS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-50 text-gray-900">
+  <nav class="bg-white shadow">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="index.html" class="font-bold text-xl">MiniLMS</a>
+      <div class="space-x-4">
+        <a href="courses.html" class="hover:underline">Courses</a>
+        <a href="dashboard.html" class="hover:underline">Dashboard</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-4xl mx-auto p-6 bg-white rounded shadow mt-6">
+    <div id="lessonWrap">
+      <!-- filled by JS -->
+    </div>
+  </main>
+
+  <script src="js/app.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const courseId = params.get('course');
+    const lessonIdx = Number(params.get('lesson') || 0);
+
+    fetch('courses.json').then(r=>r.json()).then(data=>{
+      const course = data.find(c=>String(c.id)===String(courseId));
+      if(!course){ document.getElementById('lessonWrap').innerText='Course not found'; return; }
+      const lesson = course.lessons[lessonIdx];
+      if(!lesson){ document.getElementById('lessonWrap').innerText='Lesson not found'; return; }
+
+      document.getElementById('lessonWrap').innerHTML = `
+        <h1 class="text-2xl font-bold mb-2">${lesson.title}</h1>
+        <div class="mb-4 text-sm text-gray-600">Course: <strong>${course.title}</strong></div>
+        <div class="mb-6 aspect-video bg-black overflow-hidden rounded">
+          <iframe class="w-full h-full" src="${lesson.video}" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <div class="prose max-w-none">${lesson.content}</div>
+        <div class="mt-6 flex gap-3">
+          <button id="completeBtn" class="px-4 py-2 bg-green-600 text-white rounded">Mark as Completed</button>
+          <a id="nextBtn" class="px-4 py-2 bg-sky-600 text-white rounded">Next Lesson</a>
+        </div>
+      `;
+
+      document.getElementById('nextBtn').href = lessonIdx < course.lessons.length-1
+        ? 'lesson.html?course='+courseId+'&lesson='+ (lessonIdx+1)
+        : 'course.html?id='+courseId + '#end';
+
+      document.getElementById('completeBtn').addEventListener('click', ()=>{
+        const key = 'mlms_progress_'+courseId;
+        const raw = localStorage.getItem(key);
+        const obj = raw?JSON.parse(raw):{completedLessons:[]};
+        if(!obj.completedLessons.includes(lessonIdx)) obj.completedLessons.push(lessonIdx);
+        localStorage.setItem(key, JSON.stringify(obj));
+        alert('Marked completed');
+        // update dashboard timestamp
+        const hv = JSON.parse(localStorage.getItem('mlms_meta')||'{}');
+        hv['last_'+courseId] = {lesson: lessonIdx, at: Date.now()};
+        localStorage.setItem('mlms_meta', JSON.stringify(hv));
+      });
+    });
+  </script>
+</body>
+</html>
