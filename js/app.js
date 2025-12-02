@@ -1,51 +1,63 @@
-/* app.js - helpers for MiniLMS */
-// get course by id from global window.__courses if loaded else fetch
-async function getCourse(id){
-  if(window.__courses) return window.__courses.find(c=>String(c.id)===String(id));
-  const r = await fetch('courses.json'); const data = await r.json(); window.__courses=data; return data.find(c=>String(c.id)===String(id));
+// js/app.js
+
+// Load courses from JSON and cache
+async function loadCourses() {
+  if(window.__courses) return window.__courses;
+  const res = await fetch('courses.json');
+  const data = await res.json();
+  window.__courses = data;
+  return data;
 }
 
-// Quiz helper invoked from a simple inline UI created on course end
-function showQuiz(courseId){
-  getCourse(courseId).then(course=>{
-    const qwrap = document.createElement('div');
-    qwrap.className='p-4 bg-white rounded shadow mt-4';
-    qwrap.innerHTML = '<h3 class="font-semibold mb-2">Course Quiz (5 questions)</h3>';
-    // simple 5 sample MCQs built from course data (for demo using static questions)
-    const questions = [
-      {q:'What is HTML?', opts:['Programming language','Markup language','Database','Operating system'], a:1},
-      {q:'What describes CSS?', opts:['Styling web pages','Server language','Database','Protocol'], a:0},
-      {q:'Which tag inserts JS?', opts:['<script>','<js>','<code>','<javascript>'], a:0},
-      {q:'Which is HTTP for?', opts:['Transfer files','Web protocol','Database','Design'], a:1},
-      {q:'Which is responsive design?', opts:['Mobile only','Adaptive layout','Fixed layout','Not related'], a:1},
-    ];
-    questions.forEach((qq,idx)=>{
-      const div = document.createElement('div');
-      div.className='mb-3';
-      div.innerHTML = `<div class="font-medium">${idx+1}. ${qq.q}</div>`;
-      qq.opts.forEach((opt,oi)=>{
-        const id = 'q'+idx+'o'+oi;
-        div.innerHTML += `<label class="block"><input name="q${idx}" type="radio" value="${oi}" /> ${opt}</label>`;
-      });
-      qwrap.appendChild(div);
-    });
-    const submit = document.createElement('button');
-    submit.className='px-3 py-2 bg-green-600 text-white rounded';
-    submit.innerText = 'Submit Quiz';
-    submit.onclick = ()=>{
-      let score=0;
-      for(let i=0;i<questions.length;i++){
-        const sel = document.querySelector('input[name="q'+i+'"]:checked');
-        const val = sel ? Number(sel.value) : -1;
-        if(val===questions[i].a) score+=1;
-      }
-      const percent = Math.round((score/questions.length)*100);
-      localStorage.setItem('mlms_quiz_'+courseId, JSON.stringify({score:percent, raw:score}));
-      alert('Quiz finished — Score: '+percent+'%');
-      location.reload();
-    };
-    qwrap.appendChild(submit);
-    const main = document.getElementById('main') || document.body;
-    main.appendChild(qwrap);
+// Show courses by category
+async function showCoursesByCategory(category) {
+  const courses = await loadCourses();
+  const filtered = courses.filter(c => c.category === category);
+  const container = document.getElementById('courses-container');
+  if (!container) return;
+
+  container.innerHTML = '';
+  filtered.forEach(c => {
+    const card = document.createElement('a');
+    card.href = 'course.html?id=' + c.id;
+    card.className = 'block bg-white rounded shadow overflow-hidden hover:shadow-lg transition';
+    card.innerHTML = `
+      <img src="${c.image}" alt="${c.title}" class="w-full h-44 object-cover">
+      <div class="p-4">
+        <h3 class="font-semibold">${c.title}</h3>
+        <p class="text-sm text-gray-600">${c.category} · ${c.level}</p>
+      </div>
+    `;
+    container.appendChild(card);
   });
 }
+
+// Progress functions
+function loadProgress(courseId){
+  const raw = localStorage.getItem('mlms_progress_'+courseId);
+  return raw?JSON.parse(raw):{completedLessons:[]};
+}
+function saveProgress(courseId, obj){ localStorage.setItem('mlms_progress_'+courseId, JSON.stringify(obj)); }
+function updateProgressUI(courseId, totalLessons){
+  const p = loadProgress(courseId);
+  const done = p.completedLessons ? p.completedLessons.length : 0;
+  const percent = Math.round((done/totalLessons)*100);
+  const bar = document.getElementById('progressBar');
+  if(bar) bar.style.width = percent + '%';
+  const text = document.getElementById('progressText');
+  if(text) text.innerText = percent + '% complete';
+}
+function getQuizScore(courseId){
+  const raw = localStorage.getItem('mlms_quiz_'+courseId);
+  return raw?JSON.parse(raw).score:null;
+}
+
+// Save quiz score
+function saveQuizScore(courseId, score){
+  localStorage.setItem('mlms_quiz_'+courseId, JSON.stringify({score}));
+}
+
+// Export for global usage
+window.App = {
+  loadCourses, showCoursesByCategory, saveQuizScore
+};

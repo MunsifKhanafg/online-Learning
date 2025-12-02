@@ -8,70 +8,73 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body class="bg-gray-50 text-gray-900">
-  <!-- Navbar -->
-  <nav class="bg-white shadow">
-    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-      <a href="index.html" class="font-bold text-xl">MiniLMS</a>
-      <div class="space-x-4">
-        <a href="courses.html" class="hover:underline">Courses</a>
-        <a href="dashboard.html" class="hover:underline">Dashboard</a>
+
+<nav class="bg-white shadow">
+  <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+    <a href="index.html" class="font-bold text-xl">MiniLMS</a>
+    <div class="space-x-4">
+      <a href="courses.html" class="hover:underline">Courses</a>
+      <a href="dashboard.html" class="hover:underline">Dashboard</a>
+    </div>
+  </div>
+</nav>
+
+<header class="max-w-6xl mx-auto p-8 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+  <div>
+    <h1 class="text-4xl font-extrabold mb-4">Learn modern web development — online, at your pace</h1>
+    <p class="mb-6">Interactive lessons, quizzes, and progress saving (localStorage). Mobile-friendly and built with Tailwind.</p>
+    <a href="courses.html" class="inline-block px-6 py-3 bg-sky-600 text-white rounded shadow">Browse Courses</a>
+  </div>
+  <div>
+    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=900&auto=format&fit=crop&ixlib=rb-4.0.3&s=3da4f5d1a7b3b2c9a3a8c3a6dd0a6f8f" alt="hero" class="rounded shadow-md">
+  </div>
+</header>
+
+<section class="max-w-6xl mx-auto p-8">
+  <h2 class="text-2xl font-bold mb-4">Trending Courses</h2>
+  <div id="trending" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+</section>
+
+<section class="max-w-6xl mx-auto p-8">
+  <h2 class="text-2xl font-bold mb-4">Categories</h2>
+  <div id="category-box" class="flex gap-4 flex-wrap"></div>
+</section>
+
+<footer class="bg-white mt-8 p-6">
+  <div class="max-w-6xl mx-auto text-center text-sm text-gray-600">© MiniLMS - Demo project</div>
+</footer>
+
+<script src="js/app.js"></script>
+<script>
+async function loadHome() {
+  const data = await loadCourses();
+  const trending = document.getElementById('trending');
+  data.slice(0,6).forEach(c => {
+    const card = document.createElement('a');
+    card.href = 'course.html?id=' + c.id;
+    card.className = 'block bg-white rounded shadow overflow-hidden hover:shadow-lg transition';
+    card.innerHTML = `
+      <img src="${c.image}" alt="${c.title}" class="w-full h-44 object-cover">
+      <div class="p-4">
+        <h3 class="font-semibold">${c.title}</h3>
+        <p class="text-sm text-gray-600">${c.category} · ${c.level}</p>
       </div>
-    </div>
-  </nav>
+    `;
+    trending.appendChild(card);
+  });
 
-  <!-- Hero -->
-  <header class="max-w-6xl mx-auto p-8 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-    <div>
-      <h1 class="text-4xl font-extrabold mb-4">Learn modern web development — online, at your pace</h1>
-      <p class="mb-6">Interactive lessons, quizzes, and progress saving (localStorage). Mobile-friendly and built with Tailwind.</p>
-      <a href="courses.html" class="inline-block px-6 py-3 bg-sky-600 text-white rounded shadow">Browse Courses</a>
-    </div>
-    <div>
-      <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=900&auto=format&fit=crop&ixlib=rb-4.0.3&s=3da4f5d1a7b3b2c9a3a8c3a6dd0a6f8f" alt="hero" class="rounded shadow-md">
-    </div>
-  </header>
-
-  <!-- Trending Courses -->
-  <section class="max-w-6xl mx-auto p-8">
-    <h2 class="text-2xl font-bold mb-4">Trending Courses</h2>
-    <div id="trending" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-  </section>
-
-  <!-- Categories -->
-  <section class="max-w-6xl mx-auto p-8">
-    <h2 class="text-2xl font-bold mb-4">Categories</h2>
-    <div class="flex gap-4 flex-wrap">
-      <span class="px-4 py-2 bg-white rounded shadow">Web Development</span>
-      <span class="px-4 py-2 bg-white rounded shadow">Frontend</span>
-      <span class="px-4 py-2 bg-white rounded shadow">Backend</span>
-      <span class="px-4 py-2 bg-white rounded shadow">Design</span>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="bg-white mt-8 p-6">
-    <div class="max-w-6xl mx-auto text-center text-sm text-gray-600">© MiniLMS - Demo project</div>
-  </footer>
-
-  <script src="js/app.js"></script>
-  <script>
-    // load and show trending courses
-    fetch('courses.json').then(r=>r.json()).then(data=>{
-      const trending = document.getElementById('trending');
-      data.slice(0,6).forEach(c=>{
-        const card = document.createElement('a');
-        card.href = 'course.html?id='+c.id;
-        card.className = 'block bg-white rounded shadow overflow-hidden hover:shadow-lg transition';
-        card.innerHTML = `
-          <img src="${c.image}" alt="${c.title}" class="w-full h-44 object-cover">
-          <div class="p-4">
-            <h3 class="font-semibold">${c.title}</h3>
-            <p class="text-sm text-gray-600">${c.category} · ${c.level}</p>
-          </div>
-        `;
-        trending.appendChild(card);
-      });
-    });
-  </script>
+  const box = document.getElementById('category-box');
+  const categories = [...new Set(data.map(c => c.category))];
+  const icons = { "Web Development":"💻","Frontend":"🎨","Backend":"🖥️","Design":"🎨","Programming":"🐍","AI":"🤖","Marketing":"📣","Cyber Security":"🛡️" };
+  categories.forEach(cat => {
+    const link = document.createElement('a');
+    link.href = 'courses.html?category=' + encodeURIComponent(cat);
+    link.className = 'px-4 py-2 bg-white rounded shadow hover:bg-sky-100 transition flex items-center gap-2';
+    link.innerHTML = `<span class="text-lg">${icons[cat]||"📘"}</span> <span>${cat}</span>`;
+    box.appendChild(link);
+  });
+}
+loadHome();
+</script>
 </body>
 </html>

@@ -7,7 +7,10 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="styles.css">
 </head>
+
 <body class="bg-gray-50 text-gray-900">
+
+  <!-- NAVBAR -->
   <nav class="bg-white shadow">
     <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
       <a href="index.html" class="font-bold text-xl">MiniLMS</a>
@@ -18,38 +21,64 @@
     </div>
   </nav>
 
+  <!-- MAIN -->
   <main class="max-w-6xl mx-auto p-6">
     <h1 class="text-2xl font-bold mb-4">Your Dashboard</h1>
     <div id="cards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
   </main>
 
   <script src="js/app.js"></script>
+
   <script>
-    fetch('courses.json').then(r=>r.json()).then(data=>{
-      const wrap = document.getElementById('cards');
-      data.forEach(c=>{
-        const prog = JSON.parse(localStorage.getItem('mlms_progress_'+c.id) || '{"completedLessons":[]}');
-        const done = prog.completedLessons.length;
-        const percent = Math.round((done / c.lessons.length)*100);
-        const meta = JSON.parse(localStorage.getItem('mlms_meta')||'{}')['last_'+c.id] || null;
-        const quizRaw = localStorage.getItem('mlms_quiz_'+c.id);
-        const quiz = quizRaw?JSON.parse(quizRaw).score:null;
-        const card = document.createElement('div');
-        card.className='bg-white rounded shadow p-4';
-        card.innerHTML = `
-          <img src="${c.image}" class="w-full h-36 object-cover rounded">
-          <h3 class="font-semibold mt-3">${c.title}</h3>
-          <p class="text-sm text-gray-600">${c.category} · ${c.level}</p>
-          <p class="mt-2">Progress: <strong>${percent}%</strong></p>
-          <p class="text-sm text-gray-500">Last visited: ${meta? new Date(meta.at).toLocaleString() : '—'}</p>
-          <p>Quiz: ${quiz!==null? quiz+'%' : 'Not taken'}</p>
-          <div class="mt-3">
-            <a class="px-3 py-2 bg-sky-600 text-white rounded" href="course.html?id=${c.id}">Open Course</a>
-          </div>
-        `;
-        wrap.appendChild(card);
+    fetch('courses.json')
+      .then(r => r.json())
+      .then(data => {
+        const wrap = document.getElementById('cards');
+
+        data.forEach(c => {
+          const progressData = JSON.parse(localStorage.getItem('mlms_progress_' + c.id) || '{"completedLessons":[]}');
+          const done = progressData.completedLessons.length;
+          const percent = Math.round((done / c.lessons.length) * 100);
+
+          const lastMeta = JSON.parse(localStorage.getItem('mlms_meta') || '{}')['last_' + c.id] || null;
+          const quizRaw = localStorage.getItem('mlms_quiz_' + c.id);
+          const quizScore = quizRaw ? JSON.parse(quizRaw).score : null;
+
+          const card = document.createElement('div');
+          card.className = 'bg-white rounded shadow p-4';
+
+          card.innerHTML = `
+            <img src="${c.image}" class="w-full h-36 object-cover rounded">
+            <h3 class="font-semibold mt-3">${c.title}</h3>
+            <p class="text-sm text-gray-600">${c.category} · ${c.level}</p>
+
+            <div class="mt-3">
+              <p class="text-sm font-medium">Progress: ${percent}%</p>
+
+              <!-- FIXED PROGRESS BAR -->
+              <div class="w-full bg-gray-200 rounded h-3 mt-1 overflow-hidden">
+                <div class="bg-blue-600 h-3 transition-all" style="width: ${percent}%;"></div>
+              </div>
+            </div>
+
+            <p class="text-sm text-gray-500 mt-2">
+              Last visited: ${lastMeta ? new Date(lastMeta.at).toLocaleString() : '—'}
+            </p>
+
+            <p class="mt-1">Quiz: ${quizScore !== null ? quizScore + '%' : 'Not taken'}</p>
+
+            <div class="mt-3">
+              <a class="px-3 py-2 bg-sky-600 text-white rounded inline-block"
+                 href="course.html?id=${c.id}">
+                Open Course
+              </a>
+            </div>
+          `;
+
+          wrap.appendChild(card);
+        });
       });
-    });
   </script>
+
 </body>
 </html>
