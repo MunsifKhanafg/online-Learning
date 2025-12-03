@@ -6,153 +6,153 @@
   <title>Quiz - MiniLMS</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50 text-gray-900">
 
-  <nav class="bg-white shadow">
-    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
-      <a href="index.html" class="font-bold text-xl">MiniLMS</a>
-      <div class="space-x-4">
-        <a href="courses.html" class="hover:underline">Courses</a>
-        <a href="dashboard.html" class="hover:underline">Dashboard</a>
+<body class="bg-gray-100 text-gray-800">
+
+  <!-- NAVBAR -->
+  <nav class="bg-white shadow p-4 mb-6">
+    <div class="max-w-4xl mx-auto flex justify-between items-center">
+      <div class="flex items-center space-x-4">
+        <a href="index.html" class="text-blue-600 font-semibold hover:underline">Home</a>
+        <a href="courses.html" class="text-blue-600 font-semibold hover:underline">Courses</a>
       </div>
+      <button onclick="history.back()" 
+        class="bg-gray-800 text-white px-3 py-1 rounded hover:bg-gray-900">
+        ← Back
+      </button>
     </div>
   </nav>
 
-  <main class="container mx-auto px-4 py-8" id="quiz-main"></main>
+  <div class="max-w-3xl mx-auto p-6">
+    <h1 class="text-3xl font-bold mb-4 text-center">Course Quiz</h1>
+    <div id="quiz-container"></div>
+  </div>
 
-  <script>
-    const params = new URLSearchParams(location.search);
-    const courseId = Number(params.get('course'));
-    const container = document.getElementById('quiz-main');
+<script>
+const params = new URLSearchParams(location.search);
+const courseId = Number(params.get("course"));
 
-    fetch('courses.json')
-      .then(res => res.json())
-      .then(courses => {
-        const course = courses.find(c => c.id === courseId);
-        if (!course) {
-          container.innerHTML = 'Course not found';
-          return;
-        }
+fetch("courses.json")
+  .then(res => res.json())
+  .then(courses => {
+    const course = courses.find(c => c.id === courseId);
+    const container = document.getElementById("quiz-container");
 
-        // Example quiz questions with explanations
-        const courseQuestions = course.quiz || [
-          {
-            q: "What does HTML stand for?",
-            options: ["Hyper Text Markup Language", "High Text Markup Language", "Hyperlink Text Mark Language", "Hyper Tool Markup Language"],
-            answer: 0,
-            desc: "HTML stands for Hyper Text Markup Language, which is used to structure content on the web."
-          },
-          {
-            q: "Which tag is used for a paragraph in HTML?",
-            options: ["<p>", "<div>", "<span>", "<h1>"],
-            answer: 0,
-            desc: "The <p> tag defines a paragraph in HTML."
-          },
-          {
-            q: "Which property is used to change text color in CSS?",
-            options: ["font-color", "color", "text-color", "background-color"],
-            answer: 1,
-            desc: "The CSS property 'color' is used to change the text color."
-          },
-          {
-            q: "Inside which HTML element do we put JavaScript?",
-            options: ["<js>", "<script>", "<javascript>", "<code>"],
-            answer: 1,
-            desc: "The <script> tag is used to embed JavaScript in HTML."
-          },
-          {
-            q: "Which symbol is used for comments in JavaScript?",
-            options: ["//", "/* */", "#", "<!-- -->"],
-            answer: 0,
-            desc: "In JavaScript, single-line comments use // and multi-line comments use /* */."
-          }
-        ];
+    if (!course) {
+      container.innerHTML = `<p class="text-red-600">Course not found.</p>`;
+      return;
+    }
 
-        function showQuiz() {
-          container.innerHTML = `
-            <div class="bg-white rounded shadow p-6">
-              <h1 class="text-2xl font-bold mb-4">Quiz - ${course.title}</h1>
-              <form id="quiz-form"></form>
-            </div>
-          `;
-          const form = document.getElementById('quiz-form');
+    startQuiz(course);
+  });
 
-          courseQuestions.forEach((q, idx) => {
-            const div = document.createElement('div');
-            div.className = 'mb-4';
-            div.innerHTML = `<div class="font-semibold">${idx + 1}. ${q.q}</div>`;
-            q.options.forEach((opt, i) => {
-              div.innerHTML += `
-                <label class="block">
-                  <input type="radio" name="q${idx}" value="${i}" class="mr-2">
-                  ${opt}
-                </label>
-              `;
-            });
-            form.appendChild(div);
-          });
+// ---------- START QUIZ ----------
+function startQuiz(course) {
+  const container = document.getElementById("quiz-container");
+  const questions = course.quiz || [];
 
-          const submit = document.createElement('button');
-          submit.type = 'submit';
-          submit.className = 'bg-indigo-600 text-white px-4 py-2 rounded';
-          submit.textContent = 'Submit';
-          form.appendChild(submit);
+  if (!questions.length) {
+    container.innerHTML = `<p>No quiz found for this course.</p>`;
+    return;
+  }
 
-          form.addEventListener('submit', e => {
-            e.preventDefault();
-            const data = new FormData(form);
-            let score = 0;
+  container.innerHTML = `
+    <form id="quiz-form" class="space-y-6">
+      ${questions
+        .map((q, i) => `
+          <div class="bg-white p-4 rounded shadow">
+            <p class="font-semibold mb-2">${i + 1}. ${q.q}</p>
+            ${q.options
+              .map(
+                (opt, idx) => `
+              <label class="block">
+                <input type="radio" name="q${i}" value="${idx}" class="mr-2">
+                ${opt}
+              </label>`
+              )
+              .join("")}
+          </div>
+        `)
+        .join("")}
 
-            container.innerHTML = `
-              <div class="bg-white rounded shadow p-6">
-                <h1 class="text-2xl font-bold mb-4">Results - ${course.title}</h1>
-              </div>
-            `;
-            const resultDiv = container.querySelector('div');
+      <button class="px-4 py-2 bg-blue-600 text-white rounded" type="submit">Submit Quiz</button>
+    </form>
+  `;
 
-            courseQuestions.forEach((q, idx) => {
-              const selected = data.get('q' + idx);
-              const isCorrect = Number(selected) === q.answer;
-              if (isCorrect) score++;
+  document.getElementById("quiz-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    gradeQuiz(questions);
+  });
+}
 
-              const qResult = document.createElement('div');
-              qResult.className = 'mb-4 p-4 rounded border';
-              qResult.innerHTML = `
-                <div class="font-semibold">${idx + 1}. ${q.q}</div>
-                <p>Your Answer: ${selected !== null ? q.options[selected] : 'Not answered'} ${isCorrect ? '✅' : '❌'}</p>
-                <p>Correct Answer: ${q.options[q.answer]}</p>
-                <p class="text-gray-700 italic">Explanation: ${q.desc}</p>
-              `;
-              resultDiv.appendChild(qResult);
-            });
+// ---------- GRADE QUIZ ----------
+function gradeQuiz(questions) {
+  const data = new FormData(document.getElementById("quiz-form"));
+  let score = 0;
+  const results = [];
 
-            const percent = Math.round((score / courseQuestions.length) * 100);
-            localStorage.setItem('mlms_quiz_' + courseId, JSON.stringify({ score: percent }));
+  questions.forEach((q, i) => {
+    const selected = data.get("q" + i);
+    const correct = q.answer;
 
-            const scoreDiv = document.createElement('div');
-            scoreDiv.className = 'mt-4 p-4 bg-gray-100 rounded';
-            scoreDiv.innerHTML = `Total Score: ${score}/${courseQuestions.length} (${percent}%) — ${percent >= 50 ? '<strong>Passed</strong>' : '<strong>Failed</strong>'}`;
-            resultDiv.appendChild(scoreDiv);
+    const selectedIndex = selected !== null ? Number(selected) : null;
+    if (selectedIndex === correct) score++;
 
-            if (percent < 50) {
-              const retryBtn = document.createElement('button');
-              retryBtn.className = 'mt-3 px-4 py-2 bg-yellow-500 text-white rounded';
-              retryBtn.textContent = 'Retry Quiz';
-              retryBtn.onclick = showQuiz;
-              resultDiv.appendChild(retryBtn);
-            }
-          });
-        }
+    results.push({
+      question: q.q,
+      selectedText: selectedIndex !== null ? q.options[selectedIndex] : "Not answered",
+      correctText: q.options[correct]
+    });
+  });
 
-        const savedQuiz = JSON.parse(localStorage.getItem('mlms_quiz_' + courseId));
-        if (!savedQuiz || savedQuiz.score < 50) {
-          showQuiz();
-        } else {
-          // If passed, show result
-          showQuiz(); // You can customize to show a read-only result if needed
-        }
+  const percent = Math.round((score / questions.length) * 100);
+  localStorage.setItem(
+    "mlms_quiz_" + courseId,
+    JSON.stringify({ score: percent, results })
+  );
 
-      });
-  </script>
+  showResult(percent, results);
+}
+
+// ---------- SHOW QUIZ RESULT ----------
+function showResult(percent, results) {
+  const container = document.getElementById("quiz-container");
+
+  container.innerHTML = `
+    <div class="bg-white rounded shadow p-6">
+      <h2 class="text-xl font-bold mb-3">Your Score: ${percent}%</h2>
+      <p class="mb-4 ${percent >= 50 ? "text-green-700" : "text-red-700"}">
+        ${percent >= 50 ? "You Passed 🎉" : "You Failed 😢"}
+      </p>
+
+      ${results
+        .map(
+          r => `
+        <div class="border rounded p-3 mb-3">
+          <p class="font-semibold">${r.question}</p>
+          <p>Your Answer: ${r.selectedText}</p>
+          <p>Correct Answer: ${r.correctText}</p>
+        </div>
+      `
+        )
+        .join("")}
+
+      <div class="mt-4">
+        <button onclick="restartQuiz()" 
+          class="px-4 py-2 bg-indigo-600 text-white rounded mr-2">Retry Quiz</button>
+
+        <a href="courses.html"
+          class="px-4 py-2 bg-gray-700 text-white rounded">Back to Courses</a>
+      </div>
+    </div>
+  `;
+}
+
+// ---------- RESTART QUIZ ----------
+function restartQuiz() {
+  localStorage.removeItem("mlms_quiz_" + courseId);
+  location.reload();
+}
+</script>
 </body>
 </html>
